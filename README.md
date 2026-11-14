@@ -19,14 +19,7 @@ Windows 上的开发者工具箱。界面使用 [MyGo](https://mygo.egoist.dev) 
 
 ## TODO
 
-按第一阶段实施方案，下面这些还没做。
-
-### 测试与打包
-
-- [ ] 主窗口启动和关闭
-- [ ] 分割线拖动、窗口缩放时布局不溢出
-- [ ] 编辑器输入、复制、粘贴
-- [ ] `go tool mygo build` 打出 Windows 安装包
+第一阶段的工具和打包已经完成。还剩下这些：
 
 ### 后续
 
@@ -48,6 +41,11 @@ go run .               # 启动当前程序
 go tool mygo dev       # 热重载开发
 go tool mygo build     # 打包到 build/
 ```
+
+这次构建的产物在 `build/windows-amd64/`：
+
+- `DevBox.exe`
+- `devbox-setup-0.1.0-amd64.exe`
 
 ## 目录
 
