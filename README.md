@@ -15,24 +15,11 @@ Windows 上的开发者工具箱。界面使用 [MyGo](https://mygo.egoist.dev) 
   - 左右分栏编辑器，输出只读，支持 JSON 语法高亮
   - 输出已有结果时，后续操作处理输出；修改输入后，下一次操作改用新的输入
 - Base64 工具：标准与 URL Safe 编码、解码；换行和空格会被忽略，缺少填充符也可以解码
+- 时间戳工具：秒与毫秒由用户选择，不按位数判断；与日期互转；当前时间每秒刷新；同时显示本地和 UTC
 
 ## TODO
 
 按第一阶段实施方案，下面这些还没做。
-
-### Base64
-
-- [x] 标准 Base64 编码、解码
-- [x] URL Safe Base64 编码、解码
-- [x] 非法输入提示错误
-
-### 时间戳
-
-内部统一使用 `time.Time`。秒和毫秒由用户明确选择，不按数字长度判断。
-
-- [ ] Unix 秒、毫秒与日期互转
-- [ ] 当前时间实时显示
-- [ ] UTC 与本地时区转换
 
 ### 测试与打包
 
@@ -68,8 +55,9 @@ go tool mygo build     # 打包到 build/
 | --- | --- |
 | `main.go` | 程序入口 |
 | `internal/app` | 启动和主窗口 |
-| `internal/ui` | 界面布局、JSON 和 Base64 操作 |
+| `internal/ui` | 界面布局，以及 JSON、Base64、时间戳操作 |
 | `internal/tools/json` | JSON 格式化、压缩、去转义和校验 |
 | `internal/tools/base64` | Base64 标准与 URL Safe 编解码 |
+| `internal/tools/datetime` | 时间戳与日期互转 |
 | `internal/model` | 应用状态和工具列表 |
 | `mygo.json` | 应用名称、标识和版本 |

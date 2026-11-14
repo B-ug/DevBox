@@ -23,6 +23,7 @@ type TextEditors struct {
 type Editors struct {
 	JSON   *TextEditors
 	Base64 *TextEditors
+	Clock  *ClockState
 }
 
 // NewEditors prepares the editors the main window keeps for its lifetime.
@@ -30,6 +31,7 @@ func NewEditors() *Editors {
 	return &Editors{
 		JSON:   newTextEditors("JSON", "JSON 输入", "JSON 输出", "JSON 原始内容...", "格式化结果..."),
 		Base64: newTextEditors("", "Base64 输入", "Base64 输出", "要编码或解码的文本...", "结果..."),
+		Clock:  &ClockState{},
 	}
 }
 
