@@ -150,7 +150,7 @@ func TestAboutPage(t *testing.T) {
 	if settingsAt < 0 || aboutAt < settingsAt {
 		t.Fatalf("about button order settings %d about %d in %q", settingsAt, aboutAt, tt.Texts())
 	}
-	if tt.HasText("Windows 上的开发者工具箱。") {
+	if tt.HasText("Windows 上的开发者工具箱。") || tt.HasText("检查更新") {
 		t.Fatalf("about page open on start: %q", tt.Texts())
 	}
 
@@ -161,10 +161,21 @@ func TestAboutPage(t *testing.T) {
 	if a.Selection != model.NavAbout || a.CurrentTool != model.ToolJSON || len(a.Recent) != 0 {
 		t.Fatalf("selection %s tool %s recent %v", a.Selection, a.CurrentTool, a.Recent)
 	}
-	for _, text := range []string{"关于", "DevBox", "Windows 上的开发者工具箱。", "版本", aboutVersion(), "项目地址", projectURL, "状态：就绪"} {
+	for _, text := range []string{"关于", "DevBox", "Windows 上的开发者工具箱。", "版本", aboutVersion(), "检查更新", "项目地址", projectURL, "状态：就绪"} {
 		if !tt.HasText(text) {
 			t.Fatalf("missing %q in %q", text, tt.Texts())
 		}
+	}
+	checks := 0
+	previousCheck := checkForUpdates
+	checkForUpdates = func() { checks++ }
+	t.Cleanup(func() { checkForUpdates = previousCheck })
+	if err := tt.Click("检查更新"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if checks != 1 || a.Selection != model.NavAbout || !tt.HasText("检查更新") {
+		t.Fatalf("checks %d selection %s texts %q", checks, a.Selection, tt.Texts())
 	}
 	if err := tt.Click(projectURL); err != nil {
 		t.Fatal(err)
@@ -188,7 +199,7 @@ func TestAboutPage(t *testing.T) {
 		t.Fatal(err)
 	}
 	tt.Frame()
-	if a.Selection != model.NavSettings || a.CurrentTool != model.ToolJSON || !tt.HasText("外观") || tt.HasText("Windows 上的开发者工具箱。") || tt.HasText(projectURL) {
+	if a.Selection != model.NavSettings || a.CurrentTool != model.ToolJSON || !tt.HasText("外观") || tt.HasText("Windows 上的开发者工具箱。") || tt.HasText(projectURL) || tt.HasText("检查更新") {
 		t.Fatalf("selection %s tool %s texts %q", a.Selection, a.CurrentTool, tt.Texts())
 	}
 
@@ -196,15 +207,15 @@ func TestAboutPage(t *testing.T) {
 		t.Fatal(err)
 	}
 	tt.Frame()
-	if a.Selection != model.NavAbout || !tt.HasText("Windows 上的开发者工具箱。") || tt.HasText("外观") {
-		t.Fatalf("selection %s texts %q", a.Selection, tt.Texts())
+	if checks != 1 || a.Selection != model.NavAbout || !tt.HasText("Windows 上的开发者工具箱。") || !tt.HasText("检查更新") || tt.HasText("外观") {
+		t.Fatalf("checks %d selection %s texts %q", checks, a.Selection, tt.Texts())
 	}
 
 	if err := tt.Click("JSON"); err != nil {
 		t.Fatal(err)
 	}
 	tt.Frame()
-	if a.Selection != model.ToolJSON || a.CurrentTool != model.ToolJSON || !tt.HasText("格式化、压缩与校验") || tt.HasText("Windows 上的开发者工具箱。") || tt.HasText(projectURL) || !tt.HasText("关于") {
+	if checks != 1 || a.Selection != model.ToolJSON || a.CurrentTool != model.ToolJSON || !tt.HasText("格式化、压缩与校验") || tt.HasText("Windows 上的开发者工具箱。") || tt.HasText(projectURL) || tt.HasText("检查更新") || !tt.HasText("关于") {
 		t.Fatalf("selection %s tool %s texts %q", a.Selection, a.CurrentTool, tt.Texts())
 	}
 }

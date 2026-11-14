@@ -1,6 +1,10 @@
 {
   "name": "DevBox",
   "identifier": "com.example.devbox",
-  "version": "0.1.0",
-  "out": "build"
+  "version": "0.1.1",
+  "out": "build",
+  "updates": {
+    "publicKey": "H+K4xTTTt2Fh7W6C+8kYUfWGuMViIfo+5DmlrQD/v5Y=",
+    "github": "B-ug/DevBox"
+  }
 }

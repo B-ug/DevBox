@@ -2,7 +2,7 @@
 
 Windows 上的开发者工具箱。界面使用 [MyGo](https://mygo.egoist.dev) Native UI 绘制，不使用 WebView。
 
-当前版本 `0.1.0`，优先支持 Windows 11。
+优先支持 Windows 11。
 
 ## 已有功能
 
@@ -14,6 +14,7 @@ Windows 上的开发者工具箱。界面使用 [MyGo](https://mygo.egoist.dev) 
 - 最近使用：打开过的工具出现在侧边栏，最近的在最上面，最多 8 个
 - 收藏：工具页的「收藏」把当前工具放进侧边栏「收藏工具」，再点一次取消
 - 最近使用和收藏与主题一起写入 `config.json`
+- 检查更新：关于页的「检查更新」打开 MyGo 的更新窗口。安装后的程序会在启动后检查 [GitHub Releases](https://github.com/B-ug/DevBox/releases)，有新版本时可以下载、安装并重新启动。`go run` 和 `mygo dev` 会说明当前是开发版本，不能自行更新
 - JSON 工具
   - 格式化、压缩、去除转义、校验
   - 清空、复制输出
@@ -39,7 +40,15 @@ go tool mygo build     # 打包到 build/
 这次构建的产物在 `build/windows-amd64/`：
 
 - `DevBox.exe`
-- `devbox-setup-0.1.0-amd64.exe`
+- 安装包 `*-setup-*.exe`
+
+检查更新的签名密钥这样生成。把命令打印的公钥填进 `mygo.json` 的 `updates.publicKey`，私钥内容设为仓库 Secret `MYGO_UPDATER_PRIVATE_KEY`。私钥不要提交到仓库。
+
+```powershell
+go tool mygo keygen
+```
+
+推送与 `mygo.json` 版本一致的 `v*` 标签后，工作流会把安装包和签名更新上传到草稿 Release；发布该草稿后，已安装的程序才能看到这一版。
 
 ## 目录
 

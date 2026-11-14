@@ -2,11 +2,16 @@ package ui
 
 import (
 	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/plugins/updater"
 	myui "github.com/egoist/mygo/ui"
 )
 
 // projectURL is the DevBox repository. The about page links to it.
 const projectURL = "https://github.com/B-ug/DevBox"
+
+// checkForUpdates opens the update window. Tests replace it so a click
+// does not start a real check.
+var checkForUpdates = updater.CheckForUpdates
 
 func aboutWorkspace(c *myui.Context, t *myui.Theme) {
 	myui.Column(c).Grow(1).MinWidth(0).MinHeight(0).Background(t.Background).Children(func() {
@@ -18,6 +23,11 @@ func aboutWorkspace(c *myui.Context, t *myui.Theme) {
 		myui.Column(c).Grow(1).MinWidth(0).MinHeight(0).Padding(20, 24).Gap(16).Children(func() {
 			myui.Text(c, "Windows 上的开发者工具箱。").MinWidth(0)
 			aboutFact(c, t, "版本", aboutVersion())
+			myui.Row(c).Shrink(0).Children(func() {
+				if myui.Button(c.Key("check-update"), "检查更新").Shrink(0).Clicked() {
+					checkForUpdates()
+				}
+			})
 			aboutLink(c, t, "项目地址", projectURL)
 		})
 	})
