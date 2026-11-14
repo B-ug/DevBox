@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"devbox/internal/config"
 	"devbox/internal/model"
 
 	myui "github.com/egoist/mygo/ui"
@@ -18,6 +19,10 @@ func settingsWorkspace(a *model.App, c *myui.Context, t *myui.Theme) {
 			if themeChoice(a, c) {
 				a.SetTheme(a.Theme)
 				ApplyTheme(a)
+				if err := config.Save(a.ConfigDir, config.File{Theme: a.Theme}); err != nil {
+					a.Status = "失败"
+					a.Error = "设置未能保存"
+				}
 			}
 		})
 	})

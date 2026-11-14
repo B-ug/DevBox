@@ -10,7 +10,9 @@ import (
 
 // Run opens the main window and runs the application.
 func Run() error {
+	prepareIdentity()
 	a := model.New()
+	useConfig(a)
 	mygo.Theme.SetSource(appui.ThemeSource(a))
 	mygo.App.WhenReady(func() { openWindow(a) })
 	return mygo.App.Run()

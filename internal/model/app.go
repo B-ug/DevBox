@@ -16,6 +16,8 @@ type App struct {
 	CurrentTool string
 	// Theme is dark, light, or system.
 	Theme string
+	// ConfigDir is MyGo's user data directory. Empty skips saving.
+	ConfigDir string
 	// Selection is the sidebar choice: a tool id, or NavSettings.
 	Selection string
 	// Status, Error and Elapsed are the status bar: execution state, the

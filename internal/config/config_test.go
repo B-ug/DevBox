@@ -1,0 +1,43 @@
+package config
+
+import (
+	"errors"
+	"os"
+	"path/filepath"
+	"testing"
+)
+
+func TestSaveAndLoad(t *testing.T) {
+	dir := t.TempDir()
+	if err := Save("", File{Theme: "light"}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(filepath.Join(dir, FileName)); !errors.Is(err, os.ErrNotExist) {
+		t.Fatalf("empty dir wrote a file: %v", err)
+	}
+
+	if err := Save(dir, File{Theme: "system"}); err != nil {
+		t.Fatal(err)
+	}
+	file, err := Load(dir)
+	if err != nil || file.Theme != "system" {
+		t.Fatalf("file %+v err %v", file, err)
+	}
+	if _, err := os.Stat(filepath.Join(dir, FileName+".tmp")); !errors.Is(err, os.ErrNotExist) {
+		t.Fatalf("temp file left behind: %v", err)
+	}
+
+	if err := os.WriteFile(filepath.Join(dir, FileName), []byte("{"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := Load(dir); err == nil {
+		t.Fatal("corrupt file loaded")
+	}
+}
+
+func TestLoadMissing(t *testing.T) {
+	_, err := Load(t.TempDir())
+	if !errors.Is(err, os.ErrNotExist) {
+		t.Fatalf("err %v", err)
+	}
+}

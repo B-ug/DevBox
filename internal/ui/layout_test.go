@@ -3,6 +3,7 @@ package ui
 import (
 	"testing"
 
+	"devbox/internal/config"
 	"devbox/internal/model"
 
 	"github.com/egoist/mygo"
@@ -127,6 +128,23 @@ func TestSettingsPage(t *testing.T) {
 	}
 	if a.Theme != model.ThemeSystem {
 		t.Fatalf("theme changed to %s", a.Theme)
+	}
+}
+
+func TestSettingsSaveTheme(t *testing.T) {
+	a := model.New()
+	a.ConfigDir = t.TempDir()
+	_, tt := layoutTester(a, 1200, 800)
+	if err := tt.Click("设置"); err != nil {
+		t.Fatal(err)
+	}
+	if err := tt.Click("浅色"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	file, err := config.Load(a.ConfigDir)
+	if err != nil || file.Theme != model.ThemeLight {
+		t.Fatalf("file %+v err %v theme %s", file, err, a.Theme)
 	}
 }
 
