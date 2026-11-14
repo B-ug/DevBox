@@ -22,15 +22,16 @@ func Layout(a *model.App, editors *Editors, c *myui.Context) {
 	})
 }
 
-// syncNavigation applies the sidebar choice. Settings keeps the last tool
-// so returning restores it. A new page clears the previous tool's status.
+// syncNavigation applies the sidebar choice. Settings and About keep the
+// last tool so returning restores it. A new page clears the previous
+// tool's status.
 func syncNavigation(a *model.App) {
 	if a.Selection == "" {
 		a.Selection = a.CurrentTool
 	}
-	if a.Selection == model.NavSettings {
-		if a.ShownTool != model.NavSettings {
-			a.ShownTool = model.NavSettings
+	if isAppPage(a.Selection) {
+		if a.ShownTool != a.Selection {
+			a.ShownTool = a.Selection
 			clearStatus(a)
 		}
 		return
@@ -57,10 +58,20 @@ func clearStatus(a *model.App) {
 	a.Elapsed = ""
 }
 
+// isAppPage reports a sidebar choice that is not a tool. Those pages leave
+// CurrentTool alone.
+func isAppPage(selection string) bool {
+	return selection == model.NavSettings || selection == model.NavAbout
+}
+
 func workspace(a *model.App, editors *Editors, c *myui.Context, t *myui.Theme) {
 	syncNavigation(a)
-	if a.Selection == model.NavSettings {
+	switch a.Selection {
+	case model.NavSettings:
 		settingsWorkspace(a, c, t)
+		return
+	case model.NavAbout:
+		aboutWorkspace(c, t)
 		return
 	}
 	title := "未选择工具"

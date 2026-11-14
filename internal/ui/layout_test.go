@@ -24,7 +24,7 @@ func TestLayout(t *testing.T) {
 	for _, text := range []string{
 		"DevBox", "工具导航", "工具", "JSON", "Base64", "时间戳",
 		"最近使用", "收藏工具", "格式化、压缩与校验",
-		"状态：就绪", "耗时：—", "设置", "应用",
+		"状态：就绪", "耗时：—", "设置", "关于", "应用",
 	} {
 		if !tt.HasText(text) {
 			t.Fatalf("missing %q in %q", text, tt.Texts())
@@ -132,6 +132,83 @@ func TestSettingsPage(t *testing.T) {
 	}
 }
 
+func TestAboutPage(t *testing.T) {
+	mygo.App.SetVersion("0.1.0")
+	a := model.New()
+	a.Error = "无效输入"
+	a.Elapsed = "3ms"
+	_, tt := layoutTester(a, 1200, 800)
+	settingsAt, aboutAt := -1, -1
+	for i, text := range tt.Texts() {
+		if text == "设置" && settingsAt < 0 {
+			settingsAt = i
+		}
+		if text == "关于" && aboutAt < 0 {
+			aboutAt = i
+		}
+	}
+	if settingsAt < 0 || aboutAt < settingsAt {
+		t.Fatalf("about button order settings %d about %d in %q", settingsAt, aboutAt, tt.Texts())
+	}
+	if tt.HasText("Windows 上的开发者工具箱。") {
+		t.Fatalf("about page open on start: %q", tt.Texts())
+	}
+
+	if err := tt.Click("关于"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if a.Selection != model.NavAbout || a.CurrentTool != model.ToolJSON || len(a.Recent) != 0 {
+		t.Fatalf("selection %s tool %s recent %v", a.Selection, a.CurrentTool, a.Recent)
+	}
+	for _, text := range []string{"关于", "DevBox", "Windows 上的开发者工具箱。", "版本", aboutVersion(), "项目地址", projectURL, "状态：就绪"} {
+		if !tt.HasText(text) {
+			t.Fatalf("missing %q in %q", text, tt.Texts())
+		}
+	}
+	if err := tt.Click(projectURL); err != nil {
+		t.Fatal(err)
+	}
+	if got := tt.OpenedURLs(); !slices.Equal(got, []string{projectURL}) || a.Selection != model.NavAbout {
+		t.Fatalf("opened %v selection %s", got, a.Selection)
+	}
+	if countExact(tt, aboutVersion()) < 1 || tt.HasText("外观") || tt.HasText("跟随系统") || tt.HasText("格式化、压缩与校验") {
+		t.Fatalf("texts %q", tt.Texts())
+	}
+	if a.Error != "" || a.Elapsed != "" || tt.HasText("错误：无效输入") {
+		t.Fatalf("error %q elapsed %q texts %q", a.Error, a.Elapsed, tt.Texts())
+	}
+
+	tt.Frame()
+	if a.Selection != model.NavAbout || !tt.HasText("Windows 上的开发者工具箱。") {
+		t.Fatalf("left the about page: %s %q", a.Selection, tt.Texts())
+	}
+
+	if err := tt.Click("设置"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if a.Selection != model.NavSettings || a.CurrentTool != model.ToolJSON || !tt.HasText("外观") || tt.HasText("Windows 上的开发者工具箱。") || tt.HasText(projectURL) {
+		t.Fatalf("selection %s tool %s texts %q", a.Selection, a.CurrentTool, tt.Texts())
+	}
+
+	if err := tt.Click("关于"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if a.Selection != model.NavAbout || !tt.HasText("Windows 上的开发者工具箱。") || tt.HasText("外观") {
+		t.Fatalf("selection %s texts %q", a.Selection, tt.Texts())
+	}
+
+	if err := tt.Click("JSON"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if a.Selection != model.ToolJSON || a.CurrentTool != model.ToolJSON || !tt.HasText("格式化、压缩与校验") || tt.HasText("Windows 上的开发者工具箱。") || tt.HasText(projectURL) || !tt.HasText("关于") {
+		t.Fatalf("selection %s tool %s texts %q", a.Selection, a.CurrentTool, tt.Texts())
+	}
+}
+
 func TestSettingsSaveTheme(t *testing.T) {
 	a := model.New()
 	a.ConfigDir = t.TempDir()
@@ -213,7 +290,7 @@ func TestStatusBarDetails(t *testing.T) {
 func TestLayoutAtMinimumSize(t *testing.T) {
 	a := model.New()
 	_, tt := layoutTester(a, 900, 600)
-	for _, text := range []string{"DevBox", "JSON", "Base64", "时间戳", "状态：就绪", "耗时：—", "设置"} {
+	for _, text := range []string{"DevBox", "JSON", "Base64", "时间戳", "状态：就绪", "耗时：—", "设置", "关于"} {
 		if !tt.HasText(text) {
 			t.Fatalf("missing %q at 900x600 in %q", text, tt.Texts())
 		}

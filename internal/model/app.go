@@ -7,6 +7,8 @@ const (
 
 	// NavSettings is the sidebar choice that opens the settings page.
 	NavSettings = "settings"
+	// NavAbout is the sidebar choice that opens the about page.
+	NavAbout = "about"
 
 	StatusReady = "就绪"
 )
@@ -22,7 +24,7 @@ type App struct {
 	Recent []string
 	// Favorites is the tool ids the user pinned, in the order they were added.
 	Favorites []string
-	// Selection is the sidebar choice: a tool id, or NavSettings.
+	// Selection is the sidebar choice: a tool id, NavSettings, or NavAbout.
 	Selection string
 	// Status, Error and Elapsed are the status bar: execution state, the
 	// latest error, and how long the last operation took.

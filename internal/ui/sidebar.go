@@ -26,6 +26,7 @@ func sidebar(a *model.App, c *myui.Context) {
 			})
 			myui.SidebarSection(c, "应用", nil, func() {
 				myui.SidebarItem(c, model.NavSettings, nil, "设置")
+				myui.SidebarItem(c, model.NavAbout, nil, "关于")
 			})
 		}).Grow(1).Label("工具导航")
 	})
