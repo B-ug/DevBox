@@ -8,9 +8,15 @@ import (
 	myui "github.com/egoist/mygo/ui"
 )
 
+func layoutTester(a *model.App, width, height int) (*Editors, *myui.Tester) {
+	editors := NewEditors()
+	tt := myui.NewTester(func(c *myui.Context) { Layout(a, editors, c) }, width, height)
+	return editors, tt
+}
+
 func TestLayout(t *testing.T) {
 	a := model.New()
-	tt := myui.NewTester(func(c *myui.Context) { Layout(a, c) }, 1200, 800)
+	_, tt := layoutTester(a, 1200, 800)
 
 	for _, text := range []string{
 		"DevBox", "工具导航", "工具", "JSON", "Base64", "时间戳",
@@ -70,7 +76,7 @@ func TestStatusBarDetails(t *testing.T) {
 	a := model.New()
 	a.Error = "无效输入"
 	a.Elapsed = "12ms"
-	tt := myui.NewTester(func(c *myui.Context) { Layout(a, c) }, 1200, 800)
+	_, tt := layoutTester(a, 1200, 800)
 	for _, text := range []string{"状态：就绪", "错误：无效输入", "耗时：12ms"} {
 		if !tt.HasText(text) {
 			t.Fatalf("missing %q in %q", text, tt.Texts())
@@ -80,7 +86,7 @@ func TestStatusBarDetails(t *testing.T) {
 
 func TestLayoutAtMinimumSize(t *testing.T) {
 	a := model.New()
-	tt := myui.NewTester(func(c *myui.Context) { Layout(a, c) }, 900, 600)
+	_, tt := layoutTester(a, 900, 600)
 	for _, text := range []string{"DevBox", "JSON", "Base64", "时间戳", "状态：就绪", "耗时：—"} {
 		if !tt.HasText(text) {
 			t.Fatalf("missing %q at 900x600 in %q", text, tt.Texts())

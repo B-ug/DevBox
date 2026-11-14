@@ -16,8 +16,9 @@ const (
 )
 
 func openWindow(a *model.App) {
+	editors := appui.NewEditors()
 	mygo.NewWindow(windowOptions(ui.View(func(c *ui.Context) {
-		appui.Layout(a, c)
+		appui.Layout(a, editors, c)
 	})))
 }
 

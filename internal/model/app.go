@@ -23,12 +23,16 @@ type App struct {
 	Status  string
 	Error   string
 	Elapsed string
+	// ShownTool is the tool the status bar last described. Switching tools
+	// clears that description.
+	ShownTool string
 }
 
 // New returns the initial state: JSON selected, dark theme, idle status.
 func New() *App {
 	a := &App{
 		CurrentTool: ToolJSON,
+		ShownTool:   ToolJSON,
 		Status:      StatusReady,
 	}
 	a.SetTheme(ThemeDark)
