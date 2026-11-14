@@ -32,7 +32,7 @@ func jsonWorkspace(a *model.App, ed *TextEditors, c *myui.Context) {
 				copyJSON(a, ed, c)
 			}
 		})
-		editorSplit(c, ed)
+		editorSplit(c, "json", ed)
 	})
 }
 

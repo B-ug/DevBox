@@ -34,11 +34,11 @@ func TestLayout(t *testing.T) {
 	if err := tt.Click("Base64"); err != nil {
 		t.Fatal(err)
 	}
-	if a.CurrentTool != model.ToolBase64 || !tt.HasText("编码与解码") || tt.HasText("格式化、压缩与校验") {
+	if a.CurrentTool != model.ToolBase64 || !tt.HasText("标准与 URL Safe 编解码") || tt.HasText("格式化、压缩与校验") {
 		t.Fatalf("tool %s texts %q", a.CurrentTool, tt.Texts())
 	}
 	tt.Frame()
-	if !tt.HasText("编码与解码") {
+	if !tt.HasText("标准与 URL Safe 编解码") {
 		t.Fatalf("texts after another frame %q", tt.Texts())
 	}
 

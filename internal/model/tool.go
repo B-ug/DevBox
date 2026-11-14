@@ -18,7 +18,7 @@ type Tool struct {
 func Tools() []Tool {
 	return []Tool{
 		{ID: ToolJSON, Name: "JSON", Summary: "格式化、压缩与校验"},
-		{ID: ToolBase64, Name: "Base64", Summary: "编码与解码"},
+		{ID: ToolBase64, Name: "Base64", Summary: "标准与 URL Safe 编解码"},
 		{ID: ToolTimestamp, Name: "时间戳", Summary: "秒与毫秒转换"},
 	}
 }

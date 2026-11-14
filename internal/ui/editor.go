@@ -21,13 +21,15 @@ type TextEditors struct {
 
 // Editors holds one text pair per tool that edits text.
 type Editors struct {
-	JSON *TextEditors
+	JSON   *TextEditors
+	Base64 *TextEditors
 }
 
 // NewEditors prepares the editors the main window keeps for its lifetime.
 func NewEditors() *Editors {
 	return &Editors{
-		JSON: newTextEditors("JSON", "JSON 输入", "JSON 输出", "JSON 原始内容...", "格式化结果..."),
+		JSON:   newTextEditors("JSON", "JSON 输入", "JSON 输出", "JSON 原始内容...", "格式化结果..."),
+		Base64: newTextEditors("", "Base64 输入", "Base64 输出", "要编码或解码的文本...", "结果..."),
 	}
 }
 
@@ -51,11 +53,11 @@ func newTextEditors(language, inputLabel, outputLabel, inputPlaceholder, outputP
 	return &TextEditors{Input: input, Output: output, Split: 50}
 }
 
-func editorSplit(c *myui.Context, ed *TextEditors) {
-	myui.SplitPercent(c.Key("editor-split"), &ed.Split, func() {
-		codePane(c, "input", "输入", ed.Input)
+func editorSplit(c *myui.Context, id string, ed *TextEditors) {
+	myui.SplitPercent(c.Key(id+"-split"), &ed.Split, func() {
+		codePane(c, id+"-input", "输入", ed.Input)
 	}, func() {
-		codePane(c, "output", "输出", ed.Output)
+		codePane(c, id+"-output", "输出", ed.Output)
 	}).Grow(1).MinWidth(0).MinHeight(0).SplitReset(50)
 }
 

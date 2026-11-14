@@ -14,6 +14,7 @@ Windows 上的开发者工具箱。界面使用 [MyGo](https://mygo.egoist.dev) 
   - 清空、复制输出
   - 左右分栏编辑器，输出只读，支持 JSON 语法高亮
   - 输出已有结果时，后续操作处理输出；修改输入后，下一次操作改用新的输入
+- Base64 工具：标准与 URL Safe 编码、解码；换行和空格会被忽略，缺少填充符也可以解码
 
 ## TODO
 
@@ -21,11 +22,9 @@ Windows 上的开发者工具箱。界面使用 [MyGo](https://mygo.egoist.dev) 
 
 ### Base64
 
-复用现有的左右分栏编辑器。
-
-- [ ] 标准 Base64 编码、解码
-- [ ] URL Safe Base64 编码、解码
-- [ ] 非法输入提示错误
+- [x] 标准 Base64 编码、解码
+- [x] URL Safe Base64 编码、解码
+- [x] 非法输入提示错误
 
 ### 时间戳
 
@@ -69,7 +68,8 @@ go tool mygo build     # 打包到 build/
 | --- | --- |
 | `main.go` | 程序入口 |
 | `internal/app` | 启动和主窗口 |
-| `internal/ui` | 界面布局和 JSON 操作 |
+| `internal/ui` | 界面布局、JSON 和 Base64 操作 |
 | `internal/tools/json` | JSON 格式化、压缩、去转义和校验 |
+| `internal/tools/base64` | Base64 标准与 URL Safe 编解码 |
 | `internal/model` | 应用状态和工具列表 |
 | `mygo.json` | 应用名称、标识和版本 |
