@@ -36,11 +36,14 @@ func TestLayout(t *testing.T) {
 	if a.Theme != model.ThemeDark {
 		t.Fatalf("initial theme %s", a.Theme)
 	}
+	if !tt.HasText("JSON 内容") || !tt.HasText("内容：") || tt.HasText("JSON 输出") || tt.HasText("输入：") {
+		t.Fatalf("editor texts %q", tt.Texts())
+	}
 
 	if err := tt.Click("Base64"); err != nil {
 		t.Fatal(err)
 	}
-	if a.CurrentTool != model.ToolBase64 || !tt.HasText("标准与 URL Safe 编解码") || tt.HasText("格式化、压缩与校验") {
+	if a.CurrentTool != model.ToolBase64 || !tt.HasText("标准与 URL Safe 编解码") || !tt.HasText("Base64 内容") || tt.HasText("JSON 内容") || tt.HasText("格式化、压缩与校验") {
 		t.Fatalf("tool %s texts %q", a.CurrentTool, tt.Texts())
 	}
 	tt.Frame()

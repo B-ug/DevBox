@@ -7,10 +7,12 @@ import (
 	"devbox/internal/model"
 	jsontool "devbox/internal/tools/json"
 
+	"github.com/egoist/mygo/ui/editor"
+
 	myui "github.com/egoist/mygo/ui"
 )
 
-func jsonWorkspace(a *model.App, ed *TextEditors, c *myui.Context) {
+func jsonWorkspace(a *model.App, ed *editor.State, c *myui.Context) {
 	myui.Column(c).Grow(1).MinWidth(0).MinHeight(0).Children(func() {
 		myui.Row(c).Shrink(0).Gap(8).Padding(8, 12).Children(func() {
 			if myui.Button(c, "格式化").Clicked() {
@@ -26,75 +28,61 @@ func jsonWorkspace(a *model.App, ed *TextEditors, c *myui.Context) {
 				validateJSON(a, ed)
 			}
 			if myui.Button(c, "清空").Clicked() {
-				clearJSON(a, ed)
+				clearText(a, ed)
 			}
 			if myui.Button(c, "复制").Clicked() {
-				copyJSON(a, ed, c)
+				copyText(a, ed, c)
 			}
 		})
-		editorSplit(c, "json", ed)
+		codeEditor(c, "json", ed)
 	})
 }
 
-func formatJSON(a *model.App, ed *TextEditors) {
+func formatJSON(a *model.App, ed *editor.State) {
 	start := time.Now()
-	output, err := jsontool.Format(sourceText(ed))
-	finish(a, start, err, "已格式化")
-	if err != nil {
-		return
-	}
-	ed.Output.Buffer.Set(output)
+	output, err := jsontool.Format(ed.Buffer.String())
+	applyText(a, ed, start, output, err, "已格式化")
 }
 
-func compactJSON(a *model.App, ed *TextEditors) {
+func compactJSON(a *model.App, ed *editor.State) {
 	start := time.Now()
-	output, err := jsontool.Compact(sourceText(ed))
-	finish(a, start, err, "已压缩")
-	if err != nil {
-		return
-	}
-	ed.Output.Buffer.Set(output)
+	output, err := jsontool.Compact(ed.Buffer.String())
+	applyText(a, ed, start, output, err, "已压缩")
 }
 
-func unescapeJSON(a *model.App, ed *TextEditors) {
+func unescapeJSON(a *model.App, ed *editor.State) {
 	start := time.Now()
-	output, err := jsontool.Unescape(sourceText(ed))
-	finish(a, start, err, "已去除转义")
-	if err != nil {
-		return
-	}
-	ed.Output.Buffer.Set(output)
+	output, err := jsontool.Unescape(ed.Buffer.String())
+	applyText(a, ed, start, output, err, "已去除转义")
 }
 
-func validateJSON(a *model.App, ed *TextEditors) {
+func validateJSON(a *model.App, ed *editor.State) {
 	start := time.Now()
-	err := jsontool.Validate(sourceText(ed))
+	err := jsontool.Validate(ed.Buffer.String())
 	finish(a, start, err, "校验通过")
 }
 
-// sourceText is the text an operation transforms. Output is that text once
-// a result is there and the input has not been edited since; otherwise the
-// input is used, including when the output is still empty.
-func sourceText(ed *TextEditors) string {
-	if ed.Output.Buffer.String() != "" && ed.Input.Buffer.Version() == ed.inputVersion {
-		return ed.Output.Buffer.String()
+// applyText records the outcome and, when the operation succeeded,
+// replaces the editor text. A failure leaves that text in place.
+func applyText(a *model.App, ed *editor.State, start time.Time, output string, err error, okStatus string) {
+	finish(a, start, err, okStatus)
+	if err != nil {
+		return
 	}
-	ed.inputVersion = ed.Input.Buffer.Version()
-	return ed.Input.Buffer.String()
+	ed.Buffer.Set(output)
 }
 
-func clearJSON(a *model.App, ed *TextEditors) {
-	ed.Input.Buffer.Set("")
-	ed.Output.Buffer.Set("")
+func clearText(a *model.App, ed *editor.State) {
+	ed.Buffer.Set("")
 	a.Status = "已清空"
 	a.Error = ""
 	a.Elapsed = ""
 }
 
-func copyJSON(a *model.App, ed *TextEditors, c *myui.Context) {
-	text := ed.Output.Buffer.String()
+func copyText(a *model.App, ed *editor.State, c *myui.Context) {
+	text := ed.Buffer.String()
 	if text == "" {
-		a.Status = "输出为空"
+		a.Status = "内容为空"
 		a.Error = ""
 		a.Elapsed = ""
 		return

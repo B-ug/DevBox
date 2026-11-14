@@ -11,34 +11,19 @@ import (
 
 func TestEditorPasteAndCopy(t *testing.T) {
 	editors, tt := layoutTester(model.New(), 1200, 800)
-	if err := tt.Click("JSON 输入"); err != nil {
+	if err := tt.Click("JSON 内容"); err != nil {
 		t.Fatal(err)
 	}
 	tt.SetClipboard(`{"pasted":true}`)
 	tt.Key(myui.Cmd, myui.KeyV)
 	tt.Frame()
-	if !strings.Contains(editors.JSON.Input.Buffer.String(), `"pasted"`) {
-		t.Fatalf("pasted input %q", editors.JSON.Input.Buffer.String())
+	if !strings.Contains(editors.JSON.Buffer.String(), `"pasted"`) {
+		t.Fatalf("pasted text %q", editors.JSON.Buffer.String())
 	}
 	tt.Key(myui.Cmd, myui.KeyA)
 	tt.Key(myui.Cmd, myui.KeyC)
 	if !strings.Contains(tt.Clipboard(), `"pasted"`) {
 		t.Fatalf("copied %q", tt.Clipboard())
-	}
-}
-
-func TestSplitDrag(t *testing.T) {
-	editors, tt := layoutTester(model.New(), 1200, 800)
-	x, y, ok := splitHandle(tt)
-	if !ok {
-		t.Fatal("split handle not found")
-	}
-	before := editors.JSON.Split
-	tt.Press(x, y)
-	tt.Move(x+80, y)
-	tt.Release(x+80, y)
-	if editors.JSON.Split <= before+1 {
-		t.Fatalf("split stayed %v, was %v", editors.JSON.Split, before)
 	}
 }
 
@@ -56,15 +41,4 @@ func TestLayoutStaysInsideWhenResized(t *testing.T) {
 			}
 		}
 	}
-}
-
-func splitHandle(tt *myui.Tester) (x, y float32, ok bool) {
-	y = 520
-	for x = 400; x < 1000; x += 4 {
-		tt.Move(x, y)
-		if tt.Cursor() == myui.CursorResizeEW {
-			return x, y, true
-		}
-	}
-	return 0, 0, false
 }

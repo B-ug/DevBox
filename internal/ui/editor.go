@@ -8,69 +8,43 @@ import (
 	myui "github.com/egoist/mygo/ui"
 )
 
-// TextEditors is the shared input and output pair. JSON uses it now;
-// Base64 can use another pair with the same layout.
-type TextEditors struct {
-	Input  *editor.State
-	Output *editor.State
-	Split  float32
-	// inputVersion is the input buffer version last used as the source.
-	// While the input is unchanged, the next operation transforms the output.
-	inputVersion uint64
-}
-
-// Editors holds one text pair per tool that edits text.
+// Editors holds one text editor per tool, plus the timestamp fields.
+// JSON and Base64 each keep a single buffer, and operations replace that text.
 type Editors struct {
-	JSON   *TextEditors
-	Base64 *TextEditors
+	JSON   *editor.State
+	Base64 *editor.State
 	Clock  *ClockState
 }
 
 // NewEditors prepares the editors the main window keeps for its lifetime.
 func NewEditors() *Editors {
 	return &Editors{
-		JSON:   newTextEditors("JSON", "JSON 输入", "JSON 输出", "JSON 原始内容...", "格式化结果..."),
-		Base64: newTextEditors("", "Base64 输入", "Base64 输出", "要编码或解码的文本...", "结果..."),
+		JSON:   newCodeEditor("JSON", "JSON 内容", "JSON 原始内容..."),
+		Base64: newCodeEditor("", "Base64 内容", "要编码或解码的文本..."),
 		Clock:  &ClockState{},
 	}
 }
 
-func newTextEditors(language, inputLabel, outputLabel, inputPlaceholder, outputPlaceholder string) *TextEditors {
-	lang := editor.LanguageNamed(language)
-	input := &editor.State{
+func newCodeEditor(language, label, placeholder string) *editor.State {
+	st := &editor.State{
 		Buffer:      editor.NewBuffer(""),
-		Placeholder: inputPlaceholder,
-		Label:       inputLabel,
+		Placeholder: placeholder,
+		Label:       label,
 		SoftWrap:    true,
 	}
-	output := &editor.State{
-		Buffer:      editor.NewBuffer(""),
-		Placeholder: outputPlaceholder,
-		Label:       outputLabel,
-		ReadOnly:    true,
-		SoftWrap:    true,
-	}
-	input.Buffer.SetLanguage(lang)
-	output.Buffer.SetLanguage(lang)
-	return &TextEditors{Input: input, Output: output, Split: 50}
+	st.Buffer.SetLanguage(editor.LanguageNamed(language))
+	return st
 }
 
-func editorSplit(c *myui.Context, id string, ed *TextEditors) {
-	myui.SplitPercent(c.Key(id+"-split"), &ed.Split, func() {
-		codePane(c, id+"-input", "输入", ed.Input)
-	}, func() {
-		codePane(c, id+"-output", "输出", ed.Output)
-	}).Grow(1).MinWidth(0).MinHeight(0).SplitReset(50)
-}
-
-func codePane(c *myui.Context, key, title string, st *editor.State) {
+// codeEditor fills the remaining workspace with one editable buffer.
+func codeEditor(c *myui.Context, id string, st *editor.State) {
 	t := c.Theme()
 	lines := 0
 	if st != nil && st.Buffer != nil {
 		lines = st.Buffer.LineCount()
 	}
-	myui.Column(c).Fill().MinWidth(0).MinHeight(0).Children(func() {
-		myui.Text(c, fmt.Sprintf("%s：%d 行", title, lines)).FontSize(12).TextColor(t.TextMuted).Padding(8, 12, 4).Shrink(0)
-		editor.View(c.Key(key), st).Grow(1).MinWidth(0).MinHeight(0)
+	myui.Column(c).Grow(1).MinWidth(0).MinHeight(0).Children(func() {
+		myui.Text(c, fmt.Sprintf("内容：%d 行", lines)).FontSize(12).TextColor(t.TextMuted).Padding(8, 12, 4).Shrink(0)
+		editor.View(c.Key(id), st).Grow(1).MinWidth(0).MinHeight(0)
 	})
 }
