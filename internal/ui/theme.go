@@ -6,13 +6,17 @@ import (
 	"github.com/egoist/mygo"
 )
 
-// ThemeSource is the MyGo appearance for the stored theme. System following
-// is left for the settings page, so an unknown value stays dark.
+// ThemeSource is the MyGo appearance for the stored theme. An unknown
+// value stays dark.
 func ThemeSource(a *model.App) mygo.ThemeSource {
-	if a.Theme == model.ThemeLight {
+	switch a.Theme {
+	case model.ThemeLight:
 		return mygo.ThemeLight
+	case model.ThemeSystem:
+		return mygo.ThemeSystem
+	default:
+		return mygo.ThemeDark
 	}
-	return mygo.ThemeDark
 }
 
 // ApplyTheme pushes the stored theme into MyGo. A test click skips this:
@@ -23,14 +27,4 @@ func ApplyTheme(a *model.App) {
 		return
 	}
 	mygo.Theme.SetSource(ThemeSource(a))
-}
-
-// SyncTheme reads the segmented control's index after a change and applies it.
-func SyncTheme(a *model.App) {
-	if a.ThemeIndex == model.ThemeLightIndex {
-		a.SetTheme(model.ThemeLight)
-	} else {
-		a.SetTheme(model.ThemeDark)
-	}
-	ApplyTheme(a)
 }

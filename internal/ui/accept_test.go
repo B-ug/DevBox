@@ -46,7 +46,7 @@ func TestLayoutStaysInsideWhenResized(t *testing.T) {
 	_, tt := layoutTester(model.New(), 1200, 800)
 	for _, size := range [][2]int{{900, 600}, {1400, 900}, {1200, 800}} {
 		tt.SetSize(size[0], size[1])
-		for _, label := range []string{"DevBox", "JSON", "格式化", "状态：就绪", "浅色"} {
+		for _, label := range []string{"DevBox", "JSON", "格式化", "状态：就绪", "设置"} {
 			r, ok := tt.Find(label)
 			if !ok {
 				t.Fatalf("%q missing at %dx%d in %q", label, size[0], size[1], tt.Texts())
