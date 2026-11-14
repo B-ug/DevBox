@@ -11,6 +11,9 @@ Windows 上的开发者工具箱。界面使用 [MyGo](https://mygo.egoist.dev) 
 - 深色 / 浅色主题，默认深色；也可以跟随 Windows 外观
 - 设置页：从侧边栏「应用」打开，在其中选择深色、浅色或跟随系统，再回到刚才的工具
 - 主题保存在 MyGo 应用目录的 `config.json`，下次启动会沿用。Windows 上，`go run` 和安装后的程序使用 `%AppData%\DevBox\config.json`；`mygo dev` 使用 `%AppData%\DevBox Dev\config.json`
+- 最近使用：打开过的工具出现在侧边栏，最近的在最上面，最多 8 个
+- 收藏：工具页的「收藏」把当前工具放进侧边栏「收藏工具」，再点一次取消
+- 最近使用和收藏与主题一起写入 `config.json`
 - JSON 工具
   - 格式化、压缩、去除转义、校验
   - 清空、复制输出
@@ -25,7 +28,6 @@ Windows 上的开发者工具箱。界面使用 [MyGo](https://mygo.egoist.dev) 
 
 ### 后续
 
-- [ ] 最近使用、收藏工具
 - [ ] JSON Diff
 
 ## 环境

@@ -50,5 +50,6 @@ func useConfigDir(a *model.App, dir string) error {
 	case model.ThemeDark, model.ThemeLight, model.ThemeSystem:
 		a.SetTheme(file.Theme)
 	}
+	a.UseLists(file.Recent, file.Favorites)
 	return nil
 }

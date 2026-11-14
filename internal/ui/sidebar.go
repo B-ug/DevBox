@@ -18,11 +18,25 @@ func sidebar(a *model.App, c *myui.Context) {
 					myui.SidebarItem(c, tool.ID, nil, tool.Name)
 				}
 			})
-			myui.SidebarSection(c, "最近使用", nil, func() {})
-			myui.SidebarSection(c, "收藏工具", nil, func() {})
+			myui.SidebarSection(c, "最近使用", nil, func() {
+				sidebarTools(c, a.Recent, model.RecentPrefix)
+			})
+			myui.SidebarSection(c, "收藏工具", nil, func() {
+				sidebarTools(c, a.Favorites, model.FavoritePrefix)
+			})
 			myui.SidebarSection(c, "应用", nil, func() {
 				myui.SidebarItem(c, model.NavSettings, nil, "设置")
 			})
 		}).Grow(1).Label("工具导航")
 	})
+}
+
+func sidebarTools(c *myui.Context, ids []string, prefix string) {
+	for _, id := range ids {
+		tool, ok := model.Lookup(id)
+		if !ok {
+			continue
+		}
+		myui.SidebarItem(c, prefix+tool.ID, nil, tool.Name)
+	}
 }

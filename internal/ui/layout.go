@@ -35,15 +35,20 @@ func syncNavigation(a *model.App) {
 		}
 		return
 	}
-	if _, ok := model.Lookup(a.Selection); !ok {
+	if _, ok := model.Lookup(model.ToolOf(a.Selection)); !ok {
 		a.Selection = a.CurrentTool
 	}
-	if a.CurrentTool == a.Selection && a.ShownTool == a.Selection {
+	id := model.ToolOf(a.Selection)
+	a.Selection = id
+	if a.CurrentTool == id && a.ShownTool == id {
 		return
 	}
-	a.CurrentTool = a.Selection
-	a.ShownTool = a.Selection
+	a.CurrentTool = id
+	a.ShownTool = id
 	clearStatus(a)
+	if a.Remember(id) {
+		persist(a)
+	}
 }
 
 func clearStatus(a *model.App) {
@@ -65,9 +70,22 @@ func workspace(a *model.App, editors *Editors, c *myui.Context, t *myui.Theme) {
 		summary = tool.Summary
 	}
 	myui.Column(c).Grow(1).MinWidth(0).Background(t.Background).Children(func() {
-		myui.Column(c).Shrink(0).Padding(20, 24, 12).Gap(4).Children(func() {
-			myui.Text(c, title).FontSize(22).Bold()
-			myui.Text(c, summary).TextColor(t.TextMuted)
+		myui.Row(c).Shrink(0).Padding(20, 24, 12).Gap(12).AlignItems(myui.Center).Children(func() {
+			myui.Column(c).Grow(1).MinWidth(0).Gap(4).Children(func() {
+				myui.Text(c, title).FontSize(22).Bold().MinWidth(0)
+				myui.Text(c, summary).TextColor(t.TextMuted).MinWidth(0)
+			})
+			if _, ok := model.Lookup(a.CurrentTool); ok {
+				label := "收藏"
+				if a.IsFavorite(a.CurrentTool) {
+					label = "取消收藏"
+				}
+				if myui.Button(c, label).Shrink(0).Clicked() {
+					if a.ToggleFavorite(a.CurrentTool) {
+						persist(a)
+					}
+				}
+			}
 		})
 		myui.Divider(c)
 		switch a.CurrentTool {

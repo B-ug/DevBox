@@ -13,8 +13,8 @@ type Tool struct {
 	Summary string
 }
 
-// Tools is the navigation catalog for this phase. Recent and favorite
-// sections stay empty until those lists exist.
+// Tools is the navigation catalog. Recent and favorite sections list ids
+// from these tools.
 func Tools() []Tool {
 	return []Tool{
 		{ID: ToolJSON, Name: "JSON", Summary: "格式化、压缩与校验"},

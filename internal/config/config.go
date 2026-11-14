@@ -15,7 +15,9 @@ const FileName = "config.json"
 // File is the saved settings. New fields can be added without breaking
 // older files.
 type File struct {
-	Theme string `json:"theme,omitempty"`
+	Theme     string   `json:"theme,omitempty"`
+	Recent    []string `json:"recent,omitempty"`
+	Favorites []string `json:"favorites,omitempty"`
 }
 
 // UserDir is MyGo's application data directory, created on first use.

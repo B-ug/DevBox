@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"slices"
 	"testing"
 
 	"devbox/internal/config"
@@ -146,6 +147,55 @@ func TestSettingsSaveTheme(t *testing.T) {
 	if err != nil || file.Theme != model.ThemeLight {
 		t.Fatalf("file %+v err %v theme %s", file, err, a.Theme)
 	}
+}
+
+func TestRecentAndFavorites(t *testing.T) {
+	a := model.New()
+	a.ConfigDir = t.TempDir()
+	_, tt := layoutTester(a, 1200, 800)
+	if err := tt.Click("Base64"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if !slices.Equal(a.Recent, []string{model.ToolBase64}) || countExact(tt, "Base64") < 3 {
+		t.Fatalf("recent %v texts %q", a.Recent, tt.Texts())
+	}
+
+	if err := tt.Click("收藏"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if !slices.Equal(a.Favorites, []string{model.ToolBase64}) || countExact(tt, "取消收藏") != 1 {
+		t.Fatalf("favorites %v texts %q", a.Favorites, tt.Texts())
+	}
+	file, err := config.Load(a.ConfigDir)
+	if err != nil || file.Theme != model.ThemeDark || !slices.Equal(file.Recent, a.Recent) || !slices.Equal(file.Favorites, a.Favorites) {
+		t.Fatalf("file %+v err %v", file, err)
+	}
+
+	if err := tt.Click("取消收藏"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if len(a.Favorites) != 0 || countExact(tt, "收藏") != 1 || countExact(tt, "取消收藏") != 0 {
+		t.Fatalf("favorites %v texts %q", a.Favorites, tt.Texts())
+	}
+
+	a.Selection = model.RecentID(model.ToolJSON)
+	tt.Frame()
+	if a.Selection != model.ToolJSON || a.CurrentTool != model.ToolJSON || !slices.Equal(a.Recent, []string{model.ToolJSON, model.ToolBase64}) {
+		t.Fatalf("selection %s tool %s recent %v", a.Selection, a.CurrentTool, a.Recent)
+	}
+}
+
+func countExact(tt *myui.Tester, text string) int {
+	n := 0
+	for _, item := range tt.Texts() {
+		if item == text {
+			n++
+		}
+	}
+	return n
 }
 
 func TestStatusBarDetails(t *testing.T) {

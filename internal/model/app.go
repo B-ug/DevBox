@@ -18,6 +18,10 @@ type App struct {
 	Theme string
 	// ConfigDir is MyGo's user data directory. Empty skips saving.
 	ConfigDir string
+	// Recent is the tool ids opened most recently, newest first.
+	Recent []string
+	// Favorites is the tool ids the user pinned, in the order they were added.
+	Favorites []string
 	// Selection is the sidebar choice: a tool id, or NavSettings.
 	Selection string
 	// Status, Error and Elapsed are the status bar: execution state, the
