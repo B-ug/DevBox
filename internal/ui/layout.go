@@ -106,6 +106,8 @@ func workspace(a *model.App, editors *Editors, c *myui.Context, t *myui.Theme) {
 			base64Workspace(a, editors.Base64, c)
 		case model.ToolTimestamp:
 			datetimeWorkspace(a, editors.Clock, c)
+		case model.ToolPDF:
+			pdfWorkspace(a, editors, c)
 		default:
 			myui.Column(c).Grow(1).MinWidth(0).MinHeight(0)
 		}

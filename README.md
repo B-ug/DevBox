@@ -21,6 +21,7 @@ Windows 上的开发者工具箱。界面使用 [MyGo](https://mygo.egoist.dev) 
   - 单个编辑器，操作直接改写其中的文本，支持 JSON 语法高亮；失败时保留原文
 - Base64 工具：标准与 URL Safe 编码、解码，结果写回同一个编辑器；换行和空格会被忽略，缺少填充符也可以解码
 - 时间戳工具：秒与毫秒由用户选择，不按位数判断；与日期互转；当前时间每秒刷新；同时显示本地和 UTC
+- PDF 工具：按 DPI 和质量缩小内嵌图片并重新编码为 JPEG，文字、矢量和注释保留；输出为 `原文件名_compressed.pdf`
 
 ## 环境
 
@@ -55,10 +56,11 @@ go tool mygo keygen
 | --- | --- |
 | `main.go` | 程序入口 |
 | `internal/app` | 启动和主窗口 |
-| `internal/ui` | 界面布局，以及 JSON、Base64、时间戳操作 |
+| `internal/ui` | 界面布局，以及 JSON、Base64、时间戳、PDF 操作 |
 | `internal/tools/json` | JSON 格式化、压缩、去转义和校验 |
 | `internal/tools/base64` | Base64 标准与 URL Safe 编解码 |
 | `internal/tools/datetime` | 时间戳与日期互转 |
+| `internal/tools/pdf` | 缩小 PDF 内嵌图片并写回 |
 | `internal/model` | 应用状态和工具列表 |
 | `internal/config` | 读写 MyGo 应用目录里的 `config.json` |
 | `mygo.json` | 应用名称、标识和版本 |
