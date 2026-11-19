@@ -108,6 +108,8 @@ func workspace(a *model.App, editors *Editors, c *myui.Context, t *myui.Theme) {
 			datetimeWorkspace(a, editors.Clock, c)
 		case model.ToolPDF:
 			pdfWorkspace(a, editors, c)
+		case model.ToolTranslate:
+			translateWorkspace(a, editors, c)
 		default:
 			myui.Column(c).Grow(1).MinWidth(0).MinHeight(0)
 		}

@@ -48,6 +48,37 @@ func TestUseConfigDir(t *testing.T) {
 	}
 }
 
+func TestUseConfigTranslate(t *testing.T) {
+	dir := t.TempDir()
+	err := config.Save(dir, config.File{
+		Translate: config.Translate{APIKey: "sk-test", Prompt: "custom {{target}}", Target: "nope"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	a := model.New()
+	if err := useConfigDir(a, dir); err != nil {
+		t.Fatal(err)
+	}
+	if a.Translate.APIKey != "sk-test" || a.Translate.Prompt != "custom {{target}}" || a.Translate.Target != model.TranslateTarget {
+		t.Fatalf("%+v", a.Translate)
+	}
+	if a.Translate.BaseURL != model.TranslateBaseURL || a.Translate.Model != model.TranslateModel {
+		t.Fatalf("defaults %+v", a.Translate)
+	}
+
+	if err := config.Save(dir, config.File{Theme: model.ThemeLight}); err != nil {
+		t.Fatal(err)
+	}
+	a = model.New()
+	if err := useConfigDir(a, dir); err != nil {
+		t.Fatal(err)
+	}
+	if a.Translate.APIKey != "" || a.Translate.Prompt != model.TranslatePrompt || a.Translate.Model != model.TranslateModel {
+		t.Fatalf("old file %+v", a.Translate)
+	}
+}
+
 func TestUseConfigLists(t *testing.T) {
 	dir := t.TempDir()
 	err := config.Save(dir, config.File{

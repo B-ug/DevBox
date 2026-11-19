@@ -5,6 +5,7 @@ const (
 	ToolBase64    = "base64"
 	ToolTimestamp = "datetime"
 	ToolPDF       = "pdf"
+	ToolTranslate = "translate"
 )
 
 // Tool is one entry in the sidebar and the workspace title that follows it.
@@ -22,6 +23,7 @@ func Tools() []Tool {
 		{ID: ToolBase64, Name: "Base64", Summary: "标准与 URL Safe 编解码"},
 		{ID: ToolTimestamp, Name: "时间戳", Summary: "秒与毫秒转换"},
 		{ID: ToolPDF, Name: "PDF", Summary: "缩小图片以减小体积"},
+		{ID: ToolTranslate, Name: "翻译", Summary: "调用模型翻译文本"},
 	}
 }
 

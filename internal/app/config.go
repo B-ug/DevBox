@@ -51,5 +51,12 @@ func useConfigDir(a *model.App, dir string) error {
 		a.SetTheme(file.Theme)
 	}
 	a.UseLists(file.Recent, file.Favorites)
+	a.UseTranslate(model.Translate{
+		BaseURL: file.Translate.BaseURL,
+		APIKey:  file.Translate.APIKey,
+		Model:   file.Translate.Model,
+		Prompt:  file.Translate.Prompt,
+		Target:  file.Translate.Target,
+	})
 	return nil
 }

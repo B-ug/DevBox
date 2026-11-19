@@ -34,6 +34,8 @@ type App struct {
 	// ShownTool is the tool the status bar last described. Switching tools
 	// clears that description.
 	ShownTool string
+	// Translate is the translation tool's model settings.
+	Translate Translate
 }
 
 // New returns the initial state: JSON selected, dark theme, idle status.
@@ -45,6 +47,7 @@ func New() *App {
 		Status:      StatusReady,
 	}
 	a.SetTheme(ThemeDark)
+	a.Translate.ApplyDefaults()
 	return a
 }
 

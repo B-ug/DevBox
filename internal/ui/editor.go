@@ -9,27 +9,30 @@ import (
 	myui "github.com/egoist/mygo/ui"
 )
 
-// Editors holds one text editor per tool, plus the timestamp and PDF fields.
-// JSON and Base64 each keep a single buffer, and operations replace that text.
+// Editors holds one text editor per tool, plus the timestamp, PDF, and
+// translation fields. JSON and Base64 each keep a single buffer, and
+// operations replace that text. Translation keeps plain text boxes.
 type Editors struct {
-	JSON   *editor.State
-	Base64 *editor.State
-	Clock  *ClockState
-	PDF    *PDFState
-	window *mygo.Window
+	JSON      *editor.State
+	Base64    *editor.State
+	Clock     *ClockState
+	PDF       *PDFState
+	Translate *TranslateState
+	window    *mygo.Window
 }
 
 // NewEditors prepares the editors the main window keeps for its lifetime.
 func NewEditors() *Editors {
 	return &Editors{
-		JSON:   newCodeEditor("JSON", "JSON 内容", "JSON 原始内容..."),
-		Base64: newCodeEditor("", "Base64 内容", "要编码或解码的文本..."),
-		Clock:  &ClockState{},
-		PDF:    newPDFState(),
+		JSON:      newCodeEditor("JSON", "JSON 内容", "JSON 原始内容..."),
+		Base64:    newCodeEditor("", "Base64 内容", "要编码或解码的文本..."),
+		Clock:     &ClockState{},
+		PDF:       newPDFState(),
+		Translate: newTranslateState(),
 	}
 }
 
-// UseWindow is the window background compression publishes into.
+// UseWindow is the window background work publishes into.
 // A nil window runs the work on the caller, which tests do.
 func (e *Editors) UseWindow(w *mygo.Window) {
 	if e != nil {

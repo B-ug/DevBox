@@ -35,6 +35,21 @@ func TestSaveAndLoad(t *testing.T) {
 	}
 }
 
+func TestSaveAndLoadTranslate(t *testing.T) {
+	dir := t.TempDir()
+	want := Translate{BaseURL: "https://example.test/v1", APIKey: "sk-test", Model: "demo", Prompt: "译成{{target}}", Target: "English"}
+	if err := Save(dir, File{Translate: want}); err != nil {
+		t.Fatal(err)
+	}
+	file, err := Load(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if file.Translate != want {
+		t.Fatalf("%+v", file.Translate)
+	}
+}
+
 func TestLoadMissing(t *testing.T) {
 	_, err := Load(t.TempDir())
 	if !errors.Is(err, os.ErrNotExist) {

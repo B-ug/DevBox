@@ -15,9 +15,20 @@ const FileName = "config.json"
 // File is the saved settings. New fields can be added without breaking
 // older files.
 type File struct {
-	Theme     string   `json:"theme,omitempty"`
-	Recent    []string `json:"recent,omitempty"`
-	Favorites []string `json:"favorites,omitempty"`
+	Theme     string    `json:"theme,omitempty"`
+	Recent    []string  `json:"recent,omitempty"`
+	Favorites []string  `json:"favorites,omitempty"`
+	Translate Translate `json:"translate,omitempty"`
+}
+
+// Translate is the translation tool's saved model settings. Empty fields
+// mean "use the default" except APIKey, which may be blank.
+type Translate struct {
+	BaseURL string `json:"baseURL,omitempty"`
+	APIKey  string `json:"apiKey,omitempty"`
+	Model   string `json:"model,omitempty"`
+	Prompt  string `json:"prompt,omitempty"`
+	Target  string `json:"target,omitempty"`
 }
 
 // UserDir is MyGo's application data directory, created on first use.
