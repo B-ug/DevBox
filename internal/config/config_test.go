@@ -50,6 +50,21 @@ func TestSaveAndLoadTranslate(t *testing.T) {
 	}
 }
 
+func TestSaveAndLoadTunnel(t *testing.T) {
+	dir := t.TempDir()
+	want := Tunnel{Origin: "http://127.0.0.1:3000", Emails: "a@example.com\n*@example.com", Cloudflared: `C:\Tools\cloudflared.exe`}
+	if err := Save(dir, File{Tunnel: want}); err != nil {
+		t.Fatal(err)
+	}
+	file, err := Load(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if file.Tunnel != want {
+		t.Fatalf("%+v", file.Tunnel)
+	}
+}
+
 func TestLoadMissing(t *testing.T) {
 	_, err := Load(t.TempDir())
 	if !errors.Is(err, os.ErrNotExist) {

@@ -9,15 +9,17 @@ import (
 	myui "github.com/egoist/mygo/ui"
 )
 
-// Editors holds one text editor per tool, plus the timestamp, PDF, and
-// translation fields. JSON and Base64 each keep a single buffer, and
-// operations replace that text. Translation keeps plain text boxes.
+// Editors holds one text editor per tool, plus the timestamp, PDF,
+// translation, and quick-tunnel fields. JSON and Base64 each keep a single
+// buffer, and operations replace that text. Translation keeps plain text
+// boxes. The tunnel keeps its process for the life of the window.
 type Editors struct {
 	JSON      *editor.State
 	Base64    *editor.State
 	Clock     *ClockState
 	PDF       *PDFState
 	Translate *TranslateState
+	Tunnel    *TunnelState
 	window    *mygo.Window
 }
 
@@ -29,7 +31,17 @@ func NewEditors() *Editors {
 		Clock:     &ClockState{},
 		PDF:       newPDFState(),
 		Translate: newTranslateState(),
+		Tunnel:    newTunnelState(),
 	}
+}
+
+// Close stops the quick tunnel. The window calls it after it has closed,
+// so the public address does not keep serving the local process.
+func (e *Editors) Close() {
+	if e == nil {
+		return
+	}
+	e.Tunnel.Stop(nil)
 }
 
 // UseWindow is the window background work publishes into.

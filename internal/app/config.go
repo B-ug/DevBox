@@ -58,5 +58,10 @@ func useConfigDir(a *model.App, dir string) error {
 		Prompt:  file.Translate.Prompt,
 		Target:  file.Translate.Target,
 	})
+	a.UseTunnel(model.Tunnel{
+		Origin:      file.Tunnel.Origin,
+		Emails:      file.Tunnel.Emails,
+		Cloudflared: file.Tunnel.Cloudflared,
+	})
 	return nil
 }

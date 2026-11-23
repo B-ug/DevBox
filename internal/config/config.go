@@ -19,6 +19,7 @@ type File struct {
 	Recent    []string  `json:"recent,omitempty"`
 	Favorites []string  `json:"favorites,omitempty"`
 	Translate Translate `json:"translate,omitempty"`
+	Tunnel    Tunnel    `json:"tunnel,omitempty"`
 }
 
 // Translate is the translation tool's saved model settings. Empty fields
@@ -29,6 +30,15 @@ type Translate struct {
 	Model   string `json:"model,omitempty"`
 	Prompt  string `json:"prompt,omitempty"`
 	Target  string `json:"target,omitempty"`
+}
+
+// Tunnel is the quick tunnel's saved fields. Empty Origin means the
+// default local address. Emails is the text the user typed, not a parsed
+// list. Cloudflared is empty when the program is looked up on PATH.
+type Tunnel struct {
+	Origin      string `json:"origin,omitempty"`
+	Emails      string `json:"emails,omitempty"`
+	Cloudflared string `json:"cloudflared,omitempty"`
 }
 
 // UserDir is MyGo's application data directory, created on first use.

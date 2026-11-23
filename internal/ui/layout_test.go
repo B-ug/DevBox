@@ -22,7 +22,7 @@ func TestLayout(t *testing.T) {
 	_, tt := layoutTester(a, 1200, 800)
 
 	for _, text := range []string{
-		"DevBox", "工具导航", "工具", "JSON", "Base64", "时间戳", "PDF", "翻译",
+		"DevBox", "工具导航", "工具", "JSON", "Base64", "时间戳", "PDF", "翻译", "快速隧道",
 		"最近使用", "收藏工具", "格式化、压缩与校验",
 		"状态：就绪", "耗时：—", "设置", "关于", "应用",
 	} {

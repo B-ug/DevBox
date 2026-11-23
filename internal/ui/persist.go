@@ -17,6 +17,11 @@ func persist(a *model.App) {
 			Prompt:  a.Translate.Prompt,
 			Target:  a.Translate.Target,
 		},
+		Tunnel: config.Tunnel{
+			Origin:      a.Tunnel.Origin,
+			Emails:      a.Tunnel.Emails,
+			Cloudflared: a.Tunnel.Cloudflared,
+		},
 	}); err != nil {
 		a.Status = "失败"
 		a.Error = "设置未能保存"

@@ -36,6 +36,9 @@ type App struct {
 	ShownTool string
 	// Translate is the translation tool's model settings.
 	Translate Translate
+	// Tunnel is the quick tunnel's saved address, recipients, and
+	// cloudflared path. The running process is not kept here.
+	Tunnel Tunnel
 }
 
 // New returns the initial state: JSON selected, dark theme, idle status.
@@ -48,6 +51,7 @@ func New() *App {
 	}
 	a.SetTheme(ThemeDark)
 	a.Translate.ApplyDefaults()
+	a.Tunnel.ApplyDefaults()
 	return a
 }
 

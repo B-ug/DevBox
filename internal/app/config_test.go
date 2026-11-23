@@ -79,6 +79,34 @@ func TestUseConfigTranslate(t *testing.T) {
 	}
 }
 
+func TestUseConfigTunnel(t *testing.T) {
+	dir := t.TempDir()
+	err := config.Save(dir, config.File{
+		Tunnel: config.Tunnel{Origin: "http://127.0.0.1:3000", Emails: "*@example.com", Cloudflared: "cloudflared.exe"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	a := model.New()
+	if err := useConfigDir(a, dir); err != nil {
+		t.Fatal(err)
+	}
+	if a.Tunnel.Origin != "http://127.0.0.1:3000" || a.Tunnel.Emails != "*@example.com" || a.Tunnel.Cloudflared != "cloudflared.exe" {
+		t.Fatalf("%+v", a.Tunnel)
+	}
+
+	if err := config.Save(dir, config.File{Theme: model.ThemeLight}); err != nil {
+		t.Fatal(err)
+	}
+	a = model.New()
+	if err := useConfigDir(a, dir); err != nil {
+		t.Fatal(err)
+	}
+	if a.Tunnel.Origin != model.TunnelOrigin || a.Tunnel.Emails != "" || a.Tunnel.Cloudflared != "" {
+		t.Fatalf("old file %+v", a.Tunnel)
+	}
+}
+
 func TestUseConfigLists(t *testing.T) {
 	dir := t.TempDir()
 	err := config.Save(dir, config.File{
