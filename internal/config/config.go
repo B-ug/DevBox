@@ -20,6 +20,7 @@ type File struct {
 	Favorites []string  `json:"favorites,omitempty"`
 	Translate Translate `json:"translate,omitempty"`
 	Tunnel    Tunnel    `json:"tunnel,omitempty"`
+	Gold      Gold      `json:"gold,omitempty"`
 }
 
 // Translate is the translation tool's saved model settings. Empty fields
@@ -30,6 +31,14 @@ type Translate struct {
 	Model   string `json:"model,omitempty"`
 	Prompt  string `json:"prompt,omitempty"`
 	Target  string `json:"target,omitempty"`
+}
+
+// Gold is the gold tool's saved choices. Empty fields mean the defaults:
+// grams, CNY, and one year.
+type Gold struct {
+	Weight   string `json:"weight,omitempty"`
+	Currency string `json:"currency,omitempty"`
+	Window   string `json:"window,omitempty"`
 }
 
 // Tunnel is the quick tunnel's saved fields. Empty Origin means the

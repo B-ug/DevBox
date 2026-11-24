@@ -65,6 +65,21 @@ func TestSaveAndLoadTunnel(t *testing.T) {
 	}
 }
 
+func TestSaveAndLoadGold(t *testing.T) {
+	dir := t.TempDir()
+	want := Gold{Weight: "oz", Currency: "EUR", Window: "5y"}
+	if err := Save(dir, File{Gold: want}); err != nil {
+		t.Fatal(err)
+	}
+	file, err := Load(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if file.Gold != want {
+		t.Fatalf("%+v", file.Gold)
+	}
+}
+
 func TestLoadMissing(t *testing.T) {
 	_, err := Load(t.TempDir())
 	if !errors.Is(err, os.ErrNotExist) {

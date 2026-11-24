@@ -22,6 +22,11 @@ func persist(a *model.App) {
 			Emails:      a.Tunnel.Emails,
 			Cloudflared: a.Tunnel.Cloudflared,
 		},
+		Gold: config.Gold{
+			Weight:   model.GoldWeightCode(a.Gold.Weight),
+			Currency: model.GoldCurrencyCode(a.Gold.Currency),
+			Window:   model.GoldWindowCode(a.Gold.Window),
+		},
 	}); err != nil {
 		a.Status = "失败"
 		a.Error = "设置未能保存"

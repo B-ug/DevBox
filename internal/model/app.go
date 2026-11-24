@@ -39,6 +39,8 @@ type App struct {
 	// Tunnel is the quick tunnel's saved address, recipients, and
 	// cloudflared path. The running process is not kept here.
 	Tunnel Tunnel
+	// Gold is the gold tool's weight, currency, and lookback.
+	Gold Gold
 }
 
 // New returns the initial state: JSON selected, dark theme, idle status.
@@ -52,6 +54,9 @@ func New() *App {
 	a.SetTheme(ThemeDark)
 	a.Translate.ApplyDefaults()
 	a.Tunnel.ApplyDefaults()
+	a.Gold.Currency = GoldCurrencyCNY
+	a.Gold.Window = GoldWindowYear
+	a.Gold.ApplyDefaults()
 	return a
 }
 

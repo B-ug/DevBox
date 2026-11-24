@@ -66,6 +66,9 @@ func isAppPage(selection string) bool {
 
 func workspace(a *model.App, editors *Editors, c *myui.Context, t *myui.Theme) {
 	syncNavigation(a)
+	if editors != nil && editors.Gold != nil && a.Selection != model.ToolGold {
+		editors.Gold.Leave()
+	}
 	switch a.Selection {
 	case model.NavSettings:
 		settingsWorkspace(a, c, t)
@@ -112,6 +115,8 @@ func workspace(a *model.App, editors *Editors, c *myui.Context, t *myui.Theme) {
 			translateWorkspace(a, editors, c)
 		case model.ToolTunnel:
 			tunnelWorkspace(a, editors, c)
+		case model.ToolGold:
+			goldWorkspace(a, editors, c)
 		default:
 			myui.Column(c).Grow(1).MinWidth(0).MinHeight(0)
 		}

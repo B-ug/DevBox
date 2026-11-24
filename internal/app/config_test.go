@@ -107,6 +107,34 @@ func TestUseConfigTunnel(t *testing.T) {
 	}
 }
 
+func TestUseConfigGold(t *testing.T) {
+	dir := t.TempDir()
+	err := config.Save(dir, config.File{
+		Gold: config.Gold{Weight: "kg", Currency: "JPY", Window: "6mo"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	a := model.New()
+	if err := useConfigDir(a, dir); err != nil {
+		t.Fatal(err)
+	}
+	if a.Gold.Weight != model.GoldKilogram || a.Gold.Currency != "日元" || a.Gold.Window != model.GoldWindowHalf {
+		t.Fatalf("%+v", a.Gold)
+	}
+
+	if err := config.Save(dir, config.File{Theme: model.ThemeLight}); err != nil {
+		t.Fatal(err)
+	}
+	a = model.New()
+	if err := useConfigDir(a, dir); err != nil {
+		t.Fatal(err)
+	}
+	if a.Gold.Weight != model.GoldGram || a.Gold.Currency != model.GoldCurrencyCNY || a.Gold.Window != model.GoldWindowYear {
+		t.Fatalf("old file %+v", a.Gold)
+	}
+}
+
 func TestUseConfigLists(t *testing.T) {
 	dir := t.TempDir()
 	err := config.Save(dir, config.File{

@@ -10,9 +10,9 @@ import (
 )
 
 // Editors holds one text editor per tool, plus the timestamp, PDF,
-// translation, and quick-tunnel fields. JSON and Base64 each keep a single
-// buffer, and operations replace that text. Translation keeps plain text
-// boxes. The tunnel keeps its process for the life of the window.
+// translation, quick-tunnel, and gold fields. JSON and Base64 each keep a
+// single buffer, and operations replace that text. Translation keeps plain
+// text boxes. The tunnel keeps its process for the life of the window.
 type Editors struct {
 	JSON      *editor.State
 	Base64    *editor.State
@@ -20,6 +20,7 @@ type Editors struct {
 	PDF       *PDFState
 	Translate *TranslateState
 	Tunnel    *TunnelState
+	Gold      *GoldState
 	window    *mygo.Window
 }
 
@@ -32,6 +33,7 @@ func NewEditors() *Editors {
 		PDF:       newPDFState(),
 		Translate: newTranslateState(),
 		Tunnel:    newTunnelState(),
+		Gold:      newGoldState(),
 	}
 }
 
@@ -42,6 +44,7 @@ func (e *Editors) Close() {
 		return
 	}
 	e.Tunnel.Stop(nil)
+	e.Gold.Leave()
 }
 
 // UseWindow is the window background work publishes into.

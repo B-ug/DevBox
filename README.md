@@ -13,7 +13,7 @@ Windows 上的开发者工具箱。界面使用 [MyGo](https://mygo.egoist.dev) 
 - 主题保存在 MyGo 应用目录的 `config.json`，下次启动会沿用。Windows 上，`go run` 和安装后的程序使用 `%AppData%\DevBox\config.json`；`mygo dev` 使用 `%AppData%\DevBox Dev\config.json`
 - 最近使用：打开过的工具出现在侧边栏，最近的在最上面，最多 8 个
 - 收藏：工具页的「收藏」把当前工具放进侧边栏「收藏工具」，再点一次取消
-- 最近使用、收藏、主题和翻译设置一起写入 `config.json`
+- 最近使用、收藏、主题、翻译、隧道和黄金的选择一起写入 `config.json`
 - 检查更新：关于页的「检查更新」打开 MyGo 的更新窗口。安装后的程序会在启动后检查 [GitHub Releases](https://github.com/B-ug/DevBox/releases)，有新版本时可以下载、安装并重新启动。`go run` 和 `mygo dev` 会说明当前是开发版本，不能自行更新
 - JSON 工具
   - 格式化、压缩、去除转义、校验
@@ -26,6 +26,9 @@ Windows 上的开发者工具箱。界面使用 [MyGo](https://mygo.egoist.dev) 
   - Base URL、API Key、模型名和 Prompt 在设置页修改，并写入本机 `config.json`。API Key 用密码框遮住
   - `{{target}}` 会替换成目标语言，原文作为用户消息发送
   - 接口是 OpenAI 兼容的 Chat Completions。默认地址 `https://api.openai.com/v1`，默认模型 `gpt-4o-mini`
+- 黄金：查看现货报价和日收盘走势。重量可选克、盎司、千克，币种可选人民币、美元、欧元、英镑、日元、港币。走势按重量换算，币种保持美元。回看窗口为 1 个月、3 个月、6 个月、1 年、5 年
+  - 重量、币种和回看窗口写入本机 `config.json`
+  - 价格是参考价，来源 [xaus.com](https://xaus.com/api/)
 
 ## 环境
 
@@ -60,12 +63,13 @@ go tool mygo keygen
 | --- | --- |
 | `main.go` | 程序入口 |
 | `internal/app` | 启动和主窗口 |
-| `internal/ui` | 界面布局，以及 JSON、Base64、时间戳、PDF、翻译操作 |
+| `internal/ui` | 界面布局，以及 JSON、Base64、时间戳、PDF、翻译、黄金操作 |
 | `internal/tools/json` | JSON 格式化、压缩、去转义和校验 |
 | `internal/tools/base64` | Base64 标准与 URL Safe 编解码 |
 | `internal/tools/datetime` | 时间戳与日期互转 |
 | `internal/tools/pdf` | 缩小 PDF 内嵌图片并写回 |
 | `internal/tools/translate` | 调用 OpenAI 兼容接口翻译文本 |
+| `internal/tools/gold` | 现货金价与日收盘走势 |
 | `internal/model` | 应用状态和工具列表 |
 | `internal/config` | 读写 MyGo 应用目录里的 `config.json` |
 | `mygo.json` | 应用名称、标识和版本 |

@@ -7,6 +7,7 @@ const (
 	ToolPDF       = "pdf"
 	ToolTranslate = "translate"
 	ToolTunnel    = "tunnel"
+	ToolGold      = "gold"
 )
 
 // Tool is one entry in the sidebar and the workspace title that follows it.
@@ -26,6 +27,7 @@ func Tools() []Tool {
 		{ID: ToolPDF, Name: "PDF", Summary: "缩小图片以减小体积"},
 		{ID: ToolTranslate, Name: "翻译", Summary: "调用模型翻译文本"},
 		{ID: ToolTunnel, Name: "快速隧道", Summary: "临时公开本地服务，可用邮箱限制访问"},
+		{ID: ToolGold, Name: "黄金", Summary: "查看现货金价和历史走势"},
 	}
 }
 

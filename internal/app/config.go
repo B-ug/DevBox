@@ -63,5 +63,6 @@ func useConfigDir(a *model.App, dir string) error {
 		Emails:      file.Tunnel.Emails,
 		Cloudflared: file.Tunnel.Cloudflared,
 	})
+	a.UseGold(file.Gold.Weight, file.Gold.Currency, file.Gold.Window)
 	return nil
 }
